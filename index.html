@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Masyarakat Buruh - F-SB SEMAR</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            scroll-behavior: smooth;
+        }
+        /* Navbar Khas Hitam-Merah */
+        .navbar {
+            background-color: #090d16 !important;
+            border-bottom: 2px solid #dc2626;
+        }
+        .navbar-brand img {
+            height: 42px; 
+            width: auto;
+            margin-right: 10px;
+        }
+        .sub-brand {
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        /* Hero Section dengan Siluet Vektor Buruh & Massa */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(9, 13, 22, 0.95) 0%, rgba(30, 27, 75, 0.90) 50%, rgba(153, 27, 27, 0.85) 100%), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000" fill-opacity="0.2"/></svg>');
+            color: white;
+            border-radius: 12px;
+            border: 2px solid #dc2626;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Efek Ilustrasi Siluet Barisan Massa di Latar Belakang */
+        .hero-silhouette {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 45%;
+            height: 100%;
+            opacity: 0.25;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Cpath fill='%23ffffff' d='M50,350 L50,250 L70,230 L90,250 L90,350 Z M120,350 L120,200 L140,180 L160,200 L160,350 Z M190,350 L190,220 L210,200 L230,220 L230,350 Z M260,350 L260,190 L280,170 L300,190 L300,350 Z M330,350 L330,240 L350,220 L370,240 L370,350 Z M400,350 L400,210 L420,190 L440,210 L440,350 Z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            background-size: contain;
+            pointer-events: none;
+        }
+
+        .banner-fed-title {
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fca5a5;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .banner-main-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Styling Kotak Konten / Admin Box */
+        .section-title {
+            border-left: 4px solid #dc2626;
+            padding-left: 12px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        .admin-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .admin-box:hover {
+            border-color: #dc2626;
+        }
+
+        .btn-danger-custom {
+            background-color: #dc2626;
+            color: white;
+            font-weight: 600;
+            border: none;
+        }
+        .btn-danger-custom:hover {
+            background-color: #b91c1c;
+            color: white;
+        }
+
+        footer {
+            background-color: #090d16 !important;
+            border-top: 1px solid #1e293b;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="100">
+
+    <!-- Header / Navbar (Tombol Aktif & Hidup) -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#beranda">
+                <img src="LOGO.jpeg" alt="Logo Masyarakat Buruh">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold lh-1 text-white">MASYARAKAT BURUH</span>
+                    <span class="sub-brand">F-SB SEMAR</span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-danger fw-semibold" href="#beranda">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tentang">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#edukasi">Edukasi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#opini">Artikel Opini</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#berita">Berita</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tabloid">Tabloid</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pressrelease">Press Release</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. BAGIAN BERANDA -->
+    <div id="beranda" class="container my-5">
+        <div class="hero-section p-5 mb-4 shadow">
+            <div class="hero-silhouette"></div>
+            <div class="container-fluid py-3 position-relative" style="z-index: 2;">
+                <div class="banner-fed-title">FEDERASI SERIKAT BURUH SELURUH MASYARAKAT (F-SB SEMAR)</div>
+                <h1 class="banner-main-title">MASYARAKAT BURUH</h1>
+                
+                <!-- Susunan Kalimat Sesuai Permintaan Anda -->
+                <p class="fs-6 text-warning fw-semibold mt-2 mb-3">Dari formal dan informal, kami hadir, FEDERASI ini dibangun berfokus pada pekerja formal maupun informal hingga petani.</p>
+                <p class="col-md-9 fs-5 text-light opacity-90">Wadah aspirasi, edukasi dan informasi terkini terkait dunia perburuhan baik di sektor basis formal maupun informal.</p>
+                
+                <hr class="my-4 border-light opacity-25">
+                <p class="text-white-50 small">Dibangun dan dikelola secara profesional oleh Divisi Media & Riset F-SB SEMAR.</p>
+                <a class="btn btn-danger-custom btn-lg px-4" href="#berita" role="button">Mulai Membaca Warta &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. BAGIAN TENTANG KAMI -->
+    <div id="tentang" class="container my-5 pt-4">
+        <h2 class="section-title">Tentang F-SB SEMAR</h2>
+        <div class="admin-box shadow-sm">
+            <h4 class="text-white fw-bold mb-3">Sejarah & Garis Perjuangan Kelas Pekerja</h4>
+            <p class="text-light lh-lg">
+                Federasi Serikat Buruh Seluruh Masyarakat (F-SB SEMAR) lahir dari kesadaran kolektif bahwa perjuangan kelas pekerja tidak boleh disetir oleh kepentingan Korporasi atau Segelintir orang ataupun (kaum kapitailsme). Kami berdiri tegak bersama kaum Proletarisme, menyatukan sektor formal, informal, hingga kaum tani dalam satu barisan solidaritas.
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. BAGIAN EDUKASI -->
+    <div id="edukasi" class="container my-5 pt-4">
+        <h2 class="section-title">Edukasi Hak Buruh</h2>
+        <div class="admin-box shadow-sm">
+            <h4 class="text-white fw-bold mb-3">Pusat Pengetahuan & Hak-Hak Normatif Pekerja</h4>
+            <p class="text-light lh-lg">
+                tentang edukasi hak-hak normatif buruh, serta strategi advokasi mandiri di tingkat basis pabrik dan wilayah.
+            </p>
+        </div>
+    </div>
+
+    <!-- 4. BAGIAN ARTIKEL OPINI -->
+    <div id="opini" class="container my-5 pt-4">
+        <h2 class="section-title">Artikel Opini & Analisis</h2>
+        <div class="admin-box shadow-sm">
+            <h4 class="text-white fw-bold mb-3">Pandangan Kritis & Suara Intelektual Gerakan</h4>
+            <p class="text-light lh-lg">
+                Tempat menuangkan gagsan atau ide, dinamika sosial dan perjuangan dari kawan-kawan basis.
+            </p>
+        </div>
+    </div>
+
+    <!-- 5. BAGIAN BERITA & AKSI -->
+    <div id="berita" class="container my-5 pt-4">
+        <h2 class="section-title">Berita & Aksi Lapangan</h2>
+        <div class="admin-box shadow-sm">
+            <span class="badge bg-danger mb-2">Laporan Utama</span>
+            <h3 class="text-white fw-bold h4">Konsolidasi Akbar Pekerja Menuntut Hak Normatif</h3>
+            <p class="text-muted small">Dipublikasikan oleh: Divisi Media & Riset F-SB SEMAR</p>
+            <p class="text-light lh-lg mt-3">
+                Ruang warta lapangan dan laporan perjuangan sektor formal, informal, serta kaum tani.
+            </p>
+        </div>
+    </div>
+
+    <!-- 6. BAGIAN TABLOID -->
+    <div id="tabloid" class="container my-5 pt-4">
+        <h2 class="section-title">Tabloid & Edisi Cetak</h2>
+        <div class="admin-box shadow-sm">
+            <h4 class="text-white fw-bold mb-3">Arsip Edisi Tabloid Perjuangan F-SB SEMAR</h4>
+            <p class="text-light lh-lg">
+                Kumpulan publikasi edisi cetak digital dan tabloid berkala yang mendokumentasikan perjalanan perlawanan kelas pekerja.
+            </p>
+        </div>
+    </div>
+
+    <!-- 7. BAGIAN PRESS RELEASE -->
+    <div id="pressrelease" class="container my-5 pt-4">
+        <h2 class="section-title">Press Release Resmi</h2>
+        <div class="admin-box shadow-sm">
+            <span class="badge bg-danger mb-2">Pernyataan Sikap</span>
+            <h4 class="text-white fw-bold mb-3">Siaran Pers & Sikap</h4>
+            <p class="text-light lh-lg">
+                Dokumen resmi pernyataan sikap, tuntutan terbuka, dan tanggapan federasi atas berbagai kebijakan ketenagakerjaan dan kerakyatan.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0 small">&copy; 2026 Portal Masyarakat Buruh &mdash; F-SB SEMAR. Seluruh hak cipta dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (Menghidupkan tombol navigasi) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
