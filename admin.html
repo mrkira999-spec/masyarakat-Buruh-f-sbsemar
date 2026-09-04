@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Masyarakat Buruh</title>
+    <style>
+        :root {
+            --wp-bg: #1d2327;
+            --wp-sidebar: #2c3338;
+            --wp-sidebar-text: #f0f0f1;
+            --wp-accent: #2271b1;
+            --wp-border: #c3c4c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f1;
+            color: #3c434a;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav (4 Menu Utama) */
+        aside {
+            width: 220px;
+            background: var(--wp-sidebar);
+            color: var(--wp-sidebar-text);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 20px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #191e23;
+            border-bottom: 1px solid #3c434a;
+            color: #ffb300;
+            text-transform: uppercase;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding-top: 10px;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 14px 15px;
+            color: var(--wp-sidebar-text);
+            text-decoration: none;
+            font-size: 13px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background: #191e23;
+            color: #72aee6;
+            border-left-color: #72aee6;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 220px;
+            flex-grow: 1;
+            padding: 30px;
+            background: #f0f0f1;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .wp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .wp-header h1 {
+            font-size: 23px;
+            font-weight: 400;
+            color: #1d2327;
+        }
+
+        /* Tables */
+        .wp-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid var(--wp-border);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+        }
+
+        .wp-list-table th, .wp-list-table td {
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #ccd0d4;
+        }
+
+        .wp-list-table th {
+            background: #f6f7f7;
+            font-weight: 600;
+            color: #1d2327;
+        }
+
+        .post-title-link {
+            color: var(--wp-accent);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .post-title-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons & Actions */
+        .btn-action {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        .btn-edit { color: var(--wp-accent); }
+        .btn-quick { color: #856404; }
+        .btn-delete { color: #b32d2e; }
+        .btn-action:hover { text-decoration: underline; }
+
+        .primary-btn {
+            background: var(--wp-accent);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .primary-btn:hover { background: #135e96; }
+
+        /* Gutenberg-style Editor Container */
+        .editor-container {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid var(--wp-border);
+            max-width: 850px;
+            border-radius: 4px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .meta-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #646970;
+            margin-bottom: 5px;
+        }
+
+        .meta-field select, .meta-field input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--wp-border);
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .title-input {
+            width: 100%;
+            font-size: 2em;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            margin-bottom: 25px;
+            color: #1d2327;
+        }
+
+        #blocks-canvas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .block-item {
+            border: 1px dashed transparent;
+            padding: 5px;
+        }
+        .block-item:hover { border-color: #c3c4c7; }
+
+        .block-item textarea, .block-item input[type="text"] {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 4px;
+            outline: none;
+            resize: vertical;
+        }
+
+        .image-upload-box {
+            border: 2px dashed var(--wp-border);
+            padding: 20px;
+            text-align: center;
+            background: #f6f7f7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 250px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .add-block-btn {
+            display: block;
+            margin: 0 auto;
+            background: #1d2327;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Modal Quick Edit & Inserter */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-box {
+            background: #fff;
+            width: 450px;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-box h3 { margin-bottom: 15px; font-size: 18px; }
+        .modal-box .field-group { margin-bottom: 15px; }
+        .modal-box label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .modal-box input, .modal-box select { width: 100%; padding: 8px; border: 1px solid var(--wp-border); border-radius: 4px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Nav (4 Menu Pilihan) -->
+    <aside>
+        <div class="sidebar-header">Masyarakat Buruh</div>
+        <ul class="sidebar-menu">
+            <li><a class="menu-link active" data-target="sec-post">1. Post (+)</a></li>
+            <li><a class="menu-link" data-target="sec-postingan">2. Postingan</a></li>
+            <li><a class="menu-link" data-target="sec-keluhkesah">3. Kotak Masuk Keluh Kesah</a></li>
+            <li><a class="menu-link" data-target="sec-sampah">4. Tempat Sampah</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main>
+        <!-- 1. Post (+) -->
+        <div id="sec-post" class="admin-section active">
+            <div class="wp-header">
+                <h1 id="editor-heading">Add New Post</h1>
+                <button class="primary-btn" onclick="publishPost()">Publish / Simpan</button>
+            </div>
+            <div class="editor-container">
+                <div class="meta-grid">
+                    <div class="meta-field">
+                        <label>Kategori Artikel</label>
+                        <select id="post-category">
+                            <option value="Press Release">Press Release</option>
+                            <option value="Edukasi Hak Buruh">Edukasi Hak Buruh</option>
+                            <option value="Bacaan / Opini">Bacaan / Opini</option>
+                            <option value="Berita">Berita</option>
+                            <option value="Tabloid Cetak">Tabloid Cetak</option>
+                            <option value="Sastra">Sastra</option>
+                            <option value="Kirim Keluh Kesah">Kirim Keluh Kesah</option>
+                        </select>
+                    </div>
+                    <div class="meta-field">
+                        <label>Tagar / Tags (Pisahkan dengan koma)</label>
+                        <input type="text" id="post-tags" placeholder="buruh, reformasi, upah minimum">
+                    </div>
+                </div>
+
+                <input type="text" id="post-title" class="title-input" placeholder="Add title...">
+
+                <div id="blocks-canvas">
+                    <div class="block-item" data-type="paragraph">
+                        <textarea placeholder="Tuliskan isi paragraf..."></textarea>
+                    </div>
+                </div>
+
+                <button class="add-block-btn" onclick="openBlockModal()" title="Tambah Blok">+</button>
+            </div>
+        </div>
+
+        <!-- 2. Postingan -->
+        <div id="sec-postingan" class="admin-section">
+            <div class="wp-header">
+                <h1>Daftar Postingan</h1>
+                <button class="primary-btn" onclick="switchTab('sec-post')">Tambah Baru (+)</button>
+            </div>
+            <table class="wp-list-table">
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">Judul</th>
+                        <th style="width: 15%;">Kategori</th>
+                        <th style="width: 20%;">Tagar</th>
+                        <th style="width: 15%;">Tanggal</th>
+                        <th style="width: 15%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-posts-body">
+                    <!-- Dimuat dinamis -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. Kotak Masuk Keluh Kesah -->
+        <div id="sec-keluhkesah" class="admin-section">
+            <div class="wp-header">
+                <h1>Kotak Masuk Keluh Kesah & Aspirasi</h1>
+            </div>
+            <table class="wp-list-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Pengirim / Anonim</th>
+                        <th style="width: 50%;">Isi Aspirasi / Keluhan</th>
+                        <th style="width: 15%;">Waktu</th>
+                        <th style="width: 10%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-complaints-body">
+                    <!-- Dimuat dinamis -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. Tempat Sampah -->
+        <div id="sec-sampah" class="admin-section">
+            <div class="wp-header">
+                <h1>Tempat Sampah (Trash)</h1>
+                <button class="primary-btn" style="background:#b32d2e;" onclick="emptyTrash()">Kosongkan Sampah</button>
+            </div>
+            <table class="wp-list-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Judul Konten</th>
+                        <th style="width: 20%;">Kategori</th>
+                        <th style="width: 30%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-trash-body">
+                    <!-- Dimuat dinamis -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Quick Edit -->
+    <div id="quick-edit-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Quick Edit Postingan</h3>
+            <input type="hidden" id="qe-id">
+            <div class="field-group">
+                <label>Judul Postingan</label>
+                <input type="text" id="qe-title">
+            </div>
+            <div class="field-group">
+                <label>Kategori Artikel</label>
+                <select id="qe-category">
+                    <option value="Press Release">Press Release</option>
+                    <option value="Edukasi Hak Buruh">Edukasi Hak Buruh</option>
+                    <option value="Bacaan / Opini">Bacaan / Opini</option>
+                    <option value="Berita">Berita</option>
+                    <option value="Tabloid Cetak">Tabloid Cetak</option>
+                    <option value="Sastra">Sastra</option>
+                    <option value="Kirim Keluh Kesah">Kirim Keluh Kesah</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>Tagar / Tags</label>
+                <input type="text" id="qe-tags">
+            </div>
+            <div class="modal-actions">
+                <button class="primary-btn" style="background:#6c757d;" onclick="closeQuickEdit()">Batal</button>
+                <button class="primary-btn" onclick="saveQuickEdit()">Perbarui</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Pilih Blok Editor -->
+    <div id="block-modal" class="modal-overlay" onclick="if(event.target===this) closeBlockModal()">
+        <div class="modal-box" style="width: 300px; text-align: center;">
+            <h3>Pilih Blok Konten</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <button class="primary-btn" onclick="addBlock('paragraph')">Paragraf</button>
+                <button class="primary-btn" onclick="addBlock('heading')">Heading</button>
+                <button class="primary-btn" onclick="addBlock('image')">Gambar / Foto</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEditId = null;
+
+        // Tab Switching Helper
+        function switchTab(targetID) {
+            document.querySelectorAll('.menu-link').forEach(l => {
+                l.classList.remove('active');
+                if(l.getAttribute('data-target') === targetID) l.classList.add('active');
+            });
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(targetID).classList.add('active');
+
+            if(targetID === 'sec-postingan') loadPostsTable();
+            if(targetID === 'sec-keluhkesah') loadComplaintsTable();
+            if(targetID === 'sec-sampah') loadTrashTable();
+        }
+
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(link.getAttribute('data-target') === 'sec-post') {
+                    resetEditorForNew();
+                }
+                switchTab(link.getAttribute('data-target'));
+            });
+        });
+
+        // Editor Functions
+        function resetEditorForNew() {
+            currentEditId = null;
+            document.getElementById('editor-heading').innerText = 'Add New Post';
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-tags').value = '';
+            document.getElementById('post-category').value = 'Press Release';
+            document.getElementById('blocks-canvas').innerHTML = `
+                <div class="block-item" data-type="paragraph">
+                    <textarea placeholder="Tuliskan isi paragraf..."></textarea>
+                </div>
+            `;
+        }
+
+        function openBlockModal() {
+            document.getElementById('block-modal').style.display = 'flex';
+        }
+        function closeBlockModal() {
+            document.getElementById('block-modal').style.display = 'none';
+        }
+
+        function addBlock(type) {
+            closeBlockModal();
+            const canvas = document.getElementById('blocks-canvas');
+            const div = document.createElement('div');
+            div.className = 'block-item';
+            div.setAttribute('data-type', type);
+
+            if(type === 'paragraph') {
+                div.innerHTML = `<textarea placeholder="Tuliskan isi paragraf..."></textarea>`;
+            } else if(type === 'heading') {
+                div.innerHTML = `<input type="text" placeholder="Teks heading...">`;
+            } else if(type === 'image') {
+                div.innerHTML = `
+                    <div class="image-upload-box" onclick="this.querySelector('input').click()">
+                        <span>📷 Klik untuk Unggah Foto</span>
+                        <input type="file" accept="image/*" style="display:none" onchange="previewImage(this)">
+                    </div>
+                    <img class="image-preview" src="">
+                `;
+            }
+            canvas.appendChild(div);
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = input.parentElement.parentElement.querySelector('.image-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    input.parentElement.style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Publish / Save Post
+        function publishPost() {
+            const title = document.getElementById('post-title').value.trim() || 'Tanpa Judul';
+            const category = document.getElementById('post-category').value;
+            const tags = document.getElementById('post-tags').value.trim();
+            const date = new Date().toLocaleString('id-ID');
+
+            let contentHTML = '';
+            const rawBlocks = document.getElementById('blocks-canvas').innerHTML;
+
+            document.querySelectorAll('.block-item').forEach(item => {
+                const type = item.getAttribute('data-type');
+                if(type === 'paragraph') {
+                    const val = item.querySelector('textarea').value;
+                    if(val) contentHTML += `<p>${val}</p>`;
+                } else if(type === 'heading') {
+                    const val = item.querySelector('input').value;
+                    if(val) contentHTML += `<h2>${val}</h2>`;
+                } else if(type === 'image') {
+                    const src = item.querySelector('.image-preview').src;
+                    if(src && src.startsWith('data:image')) {
+                        contentHTML += `<img src="${src}" style="max-width:100%; border-radius:4px; margin:10px 0;">`;
+                    }
+                }
+            });
+
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+
+            if(currentEditId !== null) {
+                posts = posts.map(p => p.id === currentEditId ? { ...p, title, category, tags, content: contentHTML, rawBlocks } : p);
+                alert('Postingan berhasil diperbarui!');
+            } else {
+                const newPost = { id: Date.now(), title, category, tags, content: contentHTML, rawBlocks, date };
+                posts.unshift(newPost);
+                alert('Postingan baru berhasil diterbitkan!');
+            }
+
+            localStorage.setItem('mb_posts', JSON.stringify(posts));
+            switchTab('sec-postingan');
+        }
+
+        // Load Posts Table
+        function loadPostsTable() {
+            const tbody = document.getElementById('table-posts-body');
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+
+            if(posts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #707579; padding: 20px;">Belum ada postingan.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            posts.forEach(p => {
+                tbody.innerHTML = tbody.innerHTML + `
+                    <tr>
+                        <td><a class="post-title-link" onclick="editPostFull(${p.id})">${p.title}</a></td>
+                        <td><strong>${p.category}</strong></td>
+                        <td>${p.tags || '-'}</td>
+                        <td>${p.date}</td>
+                        <td>
+                            <button class="btn-action btn-edit" onclick="editPostFull(${p.id})">Edit</button>
+                            <button class="btn-action btn-quick" onclick="openQuickEdit(${p.id})">Quick Edit</button>
+                            <button class="btn-action btn-delete" onclick="moveToTrash(${p.id})">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function editPostFull(id) {
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+            let p = posts.find(item => item.id === id);
+            if(!p) return;
+
+            currentEditId = id;
+            document.getElementById('editor-heading').innerText = 'Edit Post: ' + p.title;
+            document.getElementById('post-title').value = p.title;
+            document.getElementById('post-category').value = p.category;
+            document.getElementById('post-tags').value = p.tags || '';
+            document.getElementById('blocks-canvas').innerHTML = p.rawBlocks || `<div class="block-item" data-type="paragraph"><textarea>${p.content}</textarea></div>`;
+            
+            switchTab('sec-post');
+        }
+
+        // Quick Edit Modal
+        function openQuickEdit(id) {
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+            let p = posts.find(item => item.id === id);
+            if(!p) return;
+
+            document.getElementById('qe-id').value = p.id;
+            document.getElementById('qe-title').value = p.title;
+            document.getElementById('qe-category').value = p.category;
+            document.getElementById('qe-tags').value = p.tags || '';
+            document.getElementById('quick-edit-modal').style.display = 'flex';
+        }
+
+        function closeQuickEdit() {
+            document.getElementById('quick-edit-modal').style.display = 'none';
+        }
+
+        function saveQuickEdit() {
+            const id = Number(document.getElementById('qe-id').value);
+            const title = document.getElementById('qe-title').value;
+            const category = document.getElementById('qe-category').value;
+            const tags = document.getElementById('qe-tags').value;
+
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+            posts = posts.map(p => p.id === id ? { ...p, title, category, tags } : p);
+            localStorage.setItem('mb_posts', JSON.stringify(posts));
+
+            closeQuickEdit();
+            loadPostsTable();
+        }
+
+        // Move to Trash
+        function moveToTrash(id) {
+            if(!confirm('Pindahkan postingan ini ke Tempat Sampah?')) return;
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+            let trash = JSON.parse(localStorage.getItem('mb_trash')) || [];
+
+            let p = posts.find(item => item.id === id);
+            if(p) {
+                trash.unshift(p);
+                posts = posts.filter(item => item.id !== id);
+                localStorage.setItem('mb_posts', JSON.stringify(posts));
+                localStorage.setItem('mb_trash', JSON.stringify(trash));
+                loadPostsTable();
+            }
+        }
+
+        // Load Complaints Inbox (Contoh dummy data / localStorage)
+        function loadComplaintsTable() {
+            const tbody = document.getElementById('table-complaints-body');
+            let complaints = JSON.parse(localStorage.getItem('mb_complaints')) || [
+                { id: 1, sender: 'Anonim', message: 'Tolong perhatikan upah lembur di pabrik wilayah timur.', date: '04/09/2026 10:00' }
+            ];
+
+            if(complaints.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #707579; padding: 20px;">Belum ada keluh kesah masuk.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            complaints.forEach(c => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${c.sender}</strong></td>
+                        <td>${c.message}</td>
+                        <td>${c.date}</td>
+                        <td><button class="btn-action btn-delete" onclick="deleteComplaint(${c.id})">Hapus</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteComplaint(id) {
+            let complaints = JSON.parse(localStorage.getItem('mb_complaints')) || [];
+            complaints = complaints.filter(c => c.id !== id);
+            localStorage.setItem('mb_complaints', JSON.stringify(complaints));
+            loadComplaintsTable();
+        }
+
+        // Load Trash Table
+        function loadTrashTable() {
+            const tbody = document.getElementById('table-trash-body');
+            let trash = JSON.parse(localStorage.getItem('mb_trash')) || [];
+
+            if(trash.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #707579; padding: 20px;">Tempat sampah kosong.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            trash.forEach(t => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${t.title}</strong></td>
+                        <td>${t.category}</td>
+                        <td>
+                            <button class="btn-action btn-edit" onclick="restorePost(${t.id})">Pulihkan</button>
+                            <button class="btn-action btn-delete" onclick="deletePermanent(${t.id})">Hapus Permanen</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function restorePost(id) {
+            let posts = JSON.parse(localStorage.getItem('mb_posts')) || [];
+            let trash = JSON.parse(localStorage.getItem('mb_trash')) || [];
+
+            let p = trash.find(item => item.id === id);
+            if(p) {
+                posts.unshift(p);
+                trash = trash.filter(item => item.id !== id);
+                localStorage.setItem('mb_posts', JSON.stringify(posts));
+                localStorage.setItem('mb_trash', JSON.stringify(trash));
+                loadTrashTable();
+            }
+        }
+
+        function deletePermanent(id) {
+            if(!confirm('Hapus konten ini secara permanen?')) return;
+            let trash = JSON.parse(localStorage.getItem('mb_trash')) || [];
+            trash = trash.filter(item => item.id !== id);
+            localStorage.setItem('mb_trash', JSON.stringify(trash));
+            loadTrashTable();
+        }
+
+        function emptyTrash() {
+            if(!confirm('Kosongkan seluruh isi tempat sampah?')) return;
+            localStorage.removeItem('mb_trash');
+            loadTrashTable();
+        }
+    </script>
+</body>
+</html>
